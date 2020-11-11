@@ -22,5 +22,11 @@ export const scripts: Readonly<Script>[] = [
     command: 'echo $((1 + $RANDOM % 10000))',
     description: 'generate random number',
     alwaysVisible: true,
-  }
+  },
+  {
+    id: ScriptsEnum.EDIT_ZSHRC,
+    command: 'code -r /Users/USER_NAME/.zshrc',
+    description: 'edit .zshrc file',
+    alwaysVisible: true,
+  },
 ];

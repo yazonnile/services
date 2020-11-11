@@ -14,6 +14,7 @@ export enum ScriptsEnum {
   MYSQL_CONNECT = 'MYSQL_CONNECT',
   GET_RANDOM_HEX = 'GET_RANDOM_HEX',
   GET_RANDOM_NUMBER = 'GET_RANDOM_NUMBER',
+  EDIT_ZSHRC = 'EDIT_ZSHRC',
 }
 
 export enum ServicesEnum {

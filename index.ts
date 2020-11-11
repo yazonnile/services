@@ -135,8 +135,5 @@ Promise.all(servicesNames.map((serviceName) => {
     }
   });
 }).catch(() => {
-
+  console.log('cancel');
 });
-
-// handle ctrl+C
-
