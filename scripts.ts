@@ -24,9 +24,15 @@ export const scripts: Readonly<Script>[] = [
     alwaysVisible: true,
   },
   {
-    id: ScriptsEnum.EDIT_ZSHRC,
+    id: ScriptsEnum.ZSHRC_EDIT,
     command: 'code -r /Users/USER_NAME/.zshrc',
     description: 'edit .zshrc file',
     alwaysVisible: true,
   },
+  {
+    id: ScriptsEnum.HOSTS_EDIT,
+    command: 'code -r /etc/hosts',
+    description: 'edit hosts file',
+    alwaysVisible: true,
+  }
 ];

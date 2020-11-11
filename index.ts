@@ -11,7 +11,6 @@ const servicesNames = Object.keys(ServicesEnum);
 const buildServiceChoice = (service: Service, serviceType: ServicesTypeEnum): Choice => {
   const title: Choice['title'] = `${service.id} ${serviceType}`;
   const command: Choice['value']['command'] = `brew services ${serviceType} ${service.id}`;
-
   return {
     title,
     value: {
@@ -30,7 +29,6 @@ const buildScriptChoice = (script: Script): Choice => {
   }
 
   const title: Choice['title'] = script.id.toLowerCase();
-
   return {
     value: {
       id: script.id,
