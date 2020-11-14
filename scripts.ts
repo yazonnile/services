@@ -7,6 +7,7 @@ export const scripts: Record<ScriptsEnum, Script> = {
     id: ScriptsEnum.POSTGRE_START,
     title: 'start postgre',
     command: 'brew services start postgresql@12',
+    next: ScriptsEnum.POSTGRE_CONNECT,
     onServicesStatus: (activeServices) => !activeServices.includes(ServicesEnum.POSTGRE),
   },
   [ScriptsEnum.POSTGRE_RESTART]: {
@@ -31,6 +32,7 @@ export const scripts: Record<ScriptsEnum, Script> = {
     id: ScriptsEnum.MYSQL_START,
     title: 'start mysql',
     command: 'brew services start mysql@5.7',
+    next: ScriptsEnum.MYSQL_CONNECT,
     onServicesStatus: (activeServices) => !activeServices.includes(ServicesEnum.MYSQL),
   },
   [ScriptsEnum.MYSQL_RESTART]: {
@@ -51,16 +53,16 @@ export const scripts: Record<ScriptsEnum, Script> = {
     command: 'mysql -uroot -p',
     onServicesStatus: (activeServices) => activeServices.includes(ServicesEnum.MYSQL),
   },
-  [ScriptsEnum.GET_RANDOM_HEX]: {
-    id: ScriptsEnum.GET_RANDOM_HEX,
+  [ScriptsEnum.RANDOM_HEX_GET]: {
+    id: ScriptsEnum.RANDOM_HEX_GET,
     title: 'generate random HEX value',
-    command: `hexdump -n {{$0}} -e '4/4 "%08X" 1 "\n"' /dev/random`,
+    command: `hexdump -n {{$0}} -e '4/4 "%08X" 1 "\n"' /dev/random | pbcopy && pbpaste`,
     variables: [VariablesEnum.HEX_LENGTH],
   },
-  [ScriptsEnum.GET_RANDOM_NUMBER]: {
-    id: ScriptsEnum.GET_RANDOM_NUMBER,
+  [ScriptsEnum.RANDOM_NUMBER_GET]: {
+    id: ScriptsEnum.RANDOM_NUMBER_GET,
     title: 'generate random number',
-    command: 'echo $(({{$0}} + $RANDOM % {{$1}}))',
+    command: 'echo $(({{$0}} + $RANDOM % {{$1}})) | pbcopy && pbpaste',
     variables: [VariablesEnum.NUMBER_FROM, VariablesEnum.NUMBER_TO],
   },
   [ScriptsEnum.ZSHRC_EDIT]: {
@@ -73,15 +75,15 @@ export const scripts: Record<ScriptsEnum, Script> = {
     title: 'edit hosts file',
     command: 'code -r /etc/hosts',
   },
-  [ScriptsEnum.PROCESS_ID_BY_PORT_GET]: {
-    id: ScriptsEnum.PROCESS_ID_BY_PORT_GET,
+  [ScriptsEnum.PROCESS_ID_GET_BY_PORT]: {
+    id: ScriptsEnum.PROCESS_ID_GET_BY_PORT,
     title: 'PID by port',
-    command: `lsof -ti:{{$0}}`,
+    command: `lsof -ti:{{$0}} | pbcopy && pbpaste`,
     variables: [VariablesEnum.LOCAL_PORT],
-    output: [VariablesEnum.PROCESS_ID],
+    next: ScriptsEnum.PROCESS_KILL_BY_PID,
   },
-  [ScriptsEnum.PROCESS_BY_PID_KILL]: {
-    id: ScriptsEnum.PROCESS_BY_PID_KILL,
+  [ScriptsEnum.PROCESS_KILL_BY_PID]: {
+    id: ScriptsEnum.PROCESS_KILL_BY_PID,
     title: 'kill process by PID',
     command: 'kill -9 {{$0}}',
     variables: [VariablesEnum.PROCESS_ID],

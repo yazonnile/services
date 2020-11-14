@@ -5,7 +5,7 @@ export interface Script {
   command: string,
   title: string,
   variables?: VariablesEnum[],
-  output?: VariablesEnum[],
+  next?: ScriptsEnum,
   onServicesStatus?(activeServices: ServicesEnum[]): boolean;
 }
 

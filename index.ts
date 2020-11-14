@@ -5,6 +5,45 @@ import {ScriptsEnum, ServicesEnum} from './enums';
 import {Choice} from './types';
 import {variables} from './variables';
 
+const execCommand = async(scriptId: ScriptsEnum, prevStdout?: string) => {
+  let {command: commandString, next: nextScriptId, variables: scriptVariables} = scripts[scriptId];
+
+  // collect variables
+  if (scriptVariables) {
+    for (let i = 0; i < scriptVariables.length; i++) {
+      const variable = variables[scriptVariables[i]];
+      const {value} = await prompts({
+        name: 'value',
+        message: variable.id.toLowerCase().replace('_', ' '),
+        style: 'default',
+        ...variable,
+        ...((i === 0 && prevStdout) ? { initial: prevStdout } : {})
+      });
+
+      commandString = commandString.replace(`{{$${i}}}`, value);
+    }
+  }
+
+  if (!nextScriptId) {
+    return execSync(commandString, {stdio: 'inherit'});
+  }
+
+  const stdout = execSync(commandString).toString().trim();
+  console.log('Script result: ', stdout || 'no output');
+  const {yes} = await prompts({
+    type: 'toggle',
+    name: 'yes',
+    message: `Continue to "${scripts[nextScriptId].title}"?`,
+    initial: false,
+    active: 'yes',
+    inactive: 'no'
+  });
+
+  if (yes) {
+    return execCommand(nextScriptId, stdout);
+  }
+};
+
 // check services statuses
 Promise.all(Object.keys(ServicesEnum).map((serviceId) => {
   return new Promise(async (resolve) => {
@@ -28,42 +67,15 @@ Promise.all(Object.keys(ServicesEnum).map((serviceId) => {
       description: JSON.stringify(script.command),
     };
   });
-}).then((choices: Choice[]) => {
-  return prompts({
+}).then(async(choices: Choice[]) => {
+  const {value} = await prompts({
     type: 'select',
     name: 'value',
     message: 'Pick a script',
     choices,
   });
-}).then(async({value}: {value: ScriptsEnum}) => {
-  let {command, output, variables: scriptVariables} = scripts[value];
 
-  // collect variables
-  if (scriptVariables) {
-    for (let i = 0; i < scriptVariables.length; i++) {
-      const variable = variables[scriptVariables[i]];
-      const {value} = await prompts({
-        name: 'value',
-        message: variable.id.toLowerCase().replace('_', ' '),
-        style: 'default',
-        ...variable
-      });
-
-      command = command.replace(`{{$${i}}}`, value);
-    }
-  }
-
-  return {command, output};
-}).then(({command, output}) => {
-  if (!output) {
-    return execSync(command, {stdio: 'inherit'});
-  }
-
-  exec(command, (error, stdout) => {
-    if (!error) {
-      console.log(JSON.stringify(stdout), output);
-    }
-  });
+  return execCommand(value);
 }).catch(() => {
   console.log('cancel');
 });
