@@ -1,7 +1,33 @@
-import {VariablesEnum, VariablesTypesEnum} from './enums';
-import {NumberVariable} from './types';
+export enum VariablesEnum {
+  LOCAL_PORT = 'LOCAL_PORT',
+  PROCESS_ID = 'PROCESS_ID',
+  NUMBER_FROM = 'NUMBER_FROM',
+  NUMBER_TO = 'NUMBER_TO',
+  HEX_LENGTH = 'HEX_LENGTH',
+}
 
-export const variables: Record<VariablesEnum, NumberVariable> = {
+enum VariablesTypesEnum {
+  NUMBER = 'number',
+  STRING = 'text',
+}
+
+interface Variable {
+  id: VariablesEnum,
+  message?: string;
+}
+
+interface NumberVariable extends Variable {
+  type: VariablesTypesEnum.NUMBER,
+  initial?: number,
+}
+
+interface StringVariable extends Variable {
+  type: VariablesTypesEnum.STRING,
+  initial?: string,
+}
+
+
+export const variables: Record<VariablesEnum, NumberVariable|StringVariable> = {
   [VariablesEnum.LOCAL_PORT]: {
     id: VariablesEnum.LOCAL_PORT,
     type: VariablesTypesEnum.NUMBER,

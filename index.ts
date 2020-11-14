@@ -1,8 +1,8 @@
 import * as prompts from 'prompts';
 import {exec, execSync} from 'child_process';
-import {scripts} from './scripts';
-import {ScriptsEnum, ServicesEnum} from './enums';
-import {Choice} from './types';
+import {scripts, ScriptsEnum} from './scripts';
+import {ServicesEnum} from './services';
+import {Choice} from './choices';
 import {variables} from './variables';
 
 const execCommand = async(scriptId: ScriptsEnum, prevStdout?: string) => {
