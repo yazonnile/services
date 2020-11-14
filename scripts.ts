@@ -1,7 +1,6 @@
 import {ScriptsEnum, ServicesEnum, VariablesEnum} from './enums';
 import {Script} from './types';
 
-//persistent: true,
 export const scripts: Record<ScriptsEnum, Script> = {
   [ScriptsEnum.POSTGRE_START]: {
     id: ScriptsEnum.POSTGRE_START,
